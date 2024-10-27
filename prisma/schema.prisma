@@ -1,0 +1,28 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Specify SQLite as the provider
+  url      = env("DATABASE_URL") // Use the DATABASE_URL from .env
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  userId    String
+  amount    Float
+  category  String
+  type      String // Change this to a String instead of enum
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
